@@ -10,59 +10,44 @@ class ProjectClass extends HTMLElement {
       this.attachShadow({mode: 'open'});
       this.shadowRoot.innerHTML = `
          <style>
-         :root {
-            --local-color: #afc3a4;
-            --remote-color: #c6ddf9;
-         }
-         .wrapper{
+         // * {
+         //    margin: 0;
+         //    padding: 0;
+         // }
+
+         .project-holder {
             display: grid;
-            grid-template-columns: 1fr 1.5fr;
-            grid-template-rows: repeat(3, auto);
-            grid-template-areas: 'image name' 'image description' 'image link';
+            grid-template-rows:  200px max-content;
             border: 1px solid black;
             border-radius: 5px;
-            margin: 1rem;
-         }
-         
-         h2{
-            grid-area: name;
-            border-bottom: 1px solid black;
-            margin-inline-end: 1rem;
-         }
-
-         picture {
-            grid-area: image; 
-            margin: 0.5rem;
          }
 
          img {
-            width: 100%;
-            max-height: 200px;
             object-fit: cover;
+            width: 100%;
+            height: 100%;
          }
 
-         p{
-            grid-area: description;
+         article {
+            margin: 10px;
+         }
+         h2 {
+            border-bottom: 1px solid black;
+            margin-block-end: 10px;
          }
 
-         a{
-            grid-area: link;
-         }
-
-         @media screen and (max-width: 480px) {
-            .wrapper{
-               grid-template-columns: 1fr;
-               grid-template-rows: repeat(4, auto);
-               grid-template-areas: 'image' 'name' 'description' 'link';
-            }
+         p {
+            margin-block-end: 10px;
          }
          </style>
          
-         <div class='wrapper'>
-            <h2>Project Name</h2>
+         <div class='project-holder'>
             <picture><img src='images/image1.jpg' alt='Project Image'></picture>
-            <p>Project Description</p>
-            <a href='URL'>Read More</a>
+            <article>
+               <h2>Project Name</h2>
+               <p>Project Description</p>
+               <a href='URL'>Read More</a>
+            </article>
          </div>
          `;
    }
@@ -85,34 +70,54 @@ function loadLocalProjects() {
    if (!data) {
       localStorage.setItem('projects', JSON.stringify(projectData));
       data = localStorage.getItem('projects');
-      console.log('Loading Data. Data was not found in localStorage')
+      console.log('Loading Local Data. Data was not found in localStorage')
    }
 
    const projects = JSON.parse(data);
-   console.log(projects);
 
    for (let i =0 ; i < projects.length; i++) {
-      loadProject(projects[i]);
+      loadProject(projects[i], 'local');
    }
-
 }
 
-function loadProject(projectInfo) {
+function loadProject(projectInfo, source) {
    let projectElement = document.createElement('project-card')
    let shadow = projectElement.shadowRoot;
+   let background;
+
+   if (source === 'local') {
+      background = 'var(--local-color)';
+   } else {
+      background = 'var(--remote-color)';
+   }
+
    shadow.querySelector('h2').innerText = projectInfo.name;
    shadow.querySelector('img').src = `images/${projectInfo.image}`;
    shadow.querySelector('img').alt = projectInfo.imageAlt;
    shadow.querySelector('p').innerText = projectInfo.description;
    shadow.querySelector('a').href = projectInfo.link;
 
-   shadow.querySelector('.wrapper').style.backgroundColor = 'var(--local-color)';
+   shadow.querySelector('.project-holder').style.backgroundColor = background;
 
    document.querySelector('output').appendChild(projectElement);
 }
 
 function loadCloudProjects() {
-
+   let URI = "https://my-json-server.typicode.com/Miyuki-L/CSE-134B-HW-4-Part-2"
+   fetch(`${URI}/db`, {
+      method: 'GET',
+   }).then((response) => {
+      if(!response.ok) {
+         throw new Error('Network response was not ok');
+      }
+      return response.json();
+   }).then((data) => {
+      for (let i =0 ; i < Object.keys(data).length; i++) {
+         loadProject(data[i], 'remote');
+      }
+   }).catch((error) => {
+      console.error('Error:', error);
+   });
 }
 
 const projectData = [

@@ -11,6 +11,13 @@
       for the customElement vs the page layout and CRUD actions if you do them. Regardless of 
       what you do you use ES modules and vanilla JS.
     -->
+  <script src="project-card.js" type="module"></script>
+  <style>
+    :root {
+      --local-color: #afc3a4;
+      --remote-color: #c6ddf9;
+    }
+  </style>
 </head>
 
 <body>
@@ -70,6 +77,14 @@
       use a local file, CDN or other simple method to load the framework or library. You should not 
       require the grader to install anything or run any build scripts.
     -->
+
+    <project-card></project-card>
+    <output></output>
+    <fieldset>
+      <legend>Load Data</legend>
+      <button id="load-local">Load Local</button>
+      <button id="load-remote">Load Remote</button>
+    </fieldset>
 </body>
 
 </html>

@@ -103,7 +103,7 @@ function loadProject(projectInfo, source) {
 }
 
 function loadCloudProjects() {
-   let URI = "https://my-json-server.typicode.com/Miyuki-L/CSE-134B-HW-4-Part-2"
+   let URI = "https://my-json-server.typicode.com/Miyuki-L/CSE-134B-HW-4-Part-2/projects"
    fetch(`${URI}/db`, {
       method: 'GET',
    }).then((response) => {
@@ -112,7 +112,7 @@ function loadCloudProjects() {
       }
       return response.json();
    }).then((data) => {
-      for (let i =0 ; i < Object.keys(data).length; i++) {
+      for (let i =0 ; data.length; i++) {
          loadProject(data[i], 'remote');
       }
    }).catch((error) => {

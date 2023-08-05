@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+   <meta charset="UTF-8">
+   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+   <title>CRUD Actions</title>
+   <script src="https://cdn.zinggrid.com/zinggrid.min.js" defer></script>
+</head>
+<body>
+   <p>Note Using My JSON Server. Changes are not persisted between calls </p>
+   <zing-grid 
+   editor-controls
+   caption="Edit Remote Data"
+   pager
+   page-size="5"
+   layout="row">
+      <zg-data src="https://my-json-server.typicode.com/Miyuki-L/CSE-134B-HW-4-Part-2/projects">
+         <zg-param name="readSrc" value="https://my-json-server.typicode.com/Miyuki-L/CSE-134B-HW-4-Part-2/projects"></zg-param>
+         <!-- <zg-param name="createSrc" value="https://my-json-server.typicode.com/Miyuki-L/CSE-134B-HW-4-Part-2/"></zg-param>
+         <zg-param name="updateRowSrc" value="https://us-central1-zingsoft-demo-endpoints.cloudfunctions.net/zingsoft-paramsrc/api/updaterow"></zg-param> -->
+
+      </zg-data>
+    </zing-grid>
+
+</body>
+</html>

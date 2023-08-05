@@ -10,10 +10,6 @@ class ProjectClass extends HTMLElement {
       this.attachShadow({mode: 'open'});
       this.shadowRoot.innerHTML = `
          <style>
-         // * {
-         //    margin: 0;
-         //    padding: 0;
-         // }
 
          .project-holder {
             display: grid;
@@ -63,6 +59,9 @@ function init() {
 
    const loadCloud = document.getElementById('load-remote');
    loadCloud.addEventListener('click', loadCloudProjects);
+
+   const loadFromBin = document.getElementById('load-jsonBin');
+   loadFromBin.addEventListener('click', loadProjectsFromBin);
 }
 
 function loadLocalProjects() {
@@ -87,6 +86,8 @@ function loadProject(projectInfo, source) {
 
    if (source === 'local') {
       background = 'var(--local-color)';
+   } else if (source === 'bin') {
+      background = 'var(--bin-color)';
    } else {
       background = 'var(--remote-color)';
    }
@@ -98,6 +99,11 @@ function loadProject(projectInfo, source) {
    shadow.querySelector('a').href = projectInfo.link;
 
    shadow.querySelector('.project-holder').style.backgroundColor = background;
+
+   let img = shadow.querySelector('img');
+   img.addEventListener('error', function() {
+      img.src = 'images/image1.jpg';
+   });
 
    document.querySelector('output').appendChild(projectElement);
 }
@@ -118,6 +124,26 @@ function loadCloudProjects() {
    }).catch((error) => {
       console.error('Error:', error);
    });
+}
+
+function loadProjectsFromBin() {
+   let xhr = new XMLHttpRequest();
+
+   xhr.addEventListener('readystatechange', function() {
+      if (xhr.readyState === XMLHttpRequest.DONE) {
+         let data = JSON.parse(xhr.responseText).projects;
+         console.log(data);
+         for (let index in data) {
+            loadProject(data[index], 'bin');
+         }
+      }
+   });
+
+   xhr.open('GET', 'https://api.jsonbin.io/v3/b/64cddac1b89b1e2299cba3c8', true);
+   xhr.setRequestHeader('X-Access-Key', '$2b$10$hDvZ4EpB/3mvCTEcZXz.yeqfluH3cwQgrJZv93vPzL5H56hQWBh1a');
+   xhr.setRequestHeader('X-Bin-Meta', 'false');
+
+   xhr.send();
 }
 
 const projectData = [
